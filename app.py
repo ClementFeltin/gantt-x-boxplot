@@ -44,7 +44,7 @@ app.layout = html.Div([
         multiple=True
     ),
     dcc.Graph(id="Mygraph", figure={}),
-    html.Footer("Made by Clément FELTIN. Contact : clement.feltin@rte-france")
+    html.Footer("Made by Clément FELTIN without storing any of your data. . Contact : clement.feltin@rte-france")
 ])
 
 
@@ -88,6 +88,7 @@ def update_graph(contents, filename, date):
     else:
         return dash.no_update
 
+server = app.server
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
