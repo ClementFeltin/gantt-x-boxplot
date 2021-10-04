@@ -11,7 +11,7 @@ import dash_table
 
 import pandas as pd
 
-from utils import proba_gantt, ws_to_df
+from utils import proba_gantt, simulation_to_df
 from authentification import VALID_USERNAME_PASSWORD_PAIRS
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -23,7 +23,8 @@ auth = dash_auth.BasicAuth(
 )
 
 app.layout = html.Div([
-    html.Header("Gantt X Boxplot"),
+    html.Header("Gantt ❌Boxplot"),
+    html.Blockquote("This app does not store any of your data."),
     dcc.Upload(
         id='upload-data',
         children=html.Div([
@@ -44,7 +45,7 @@ app.layout = html.Div([
         multiple=True
     ),
     dcc.Graph(id="Mygraph", figure={}),
-    html.Footer("Made by Clément FELTIN without storing any of your data. . Contact : clement.feltin@rte-france")
+    html.Footer(["Made by Clément Feltin. Feel free to contribute: ", html.A("https://github.com/ClementFeltin/gantt-x-boxplot")]),
 ])
 
 
@@ -60,7 +61,7 @@ def parse_contents(contents, filename, date):
         elif 'xls' in filename:
             # Assume that the user uploaded an excel file
             # df = pd.read_excel(io.BytesIO(decoded))
-            df = ws_to_df(io.BytesIO(decoded))
+            df = simulation_to_df(io.BytesIO(decoded))
     except Exception as e:
         print(e)
         return html.Div([
