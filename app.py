@@ -23,28 +23,37 @@ auth = dash_auth.BasicAuth(
 )
 
 app.layout = html.Div([
-    html.Header("Gantt ❌Boxplot"),
-    html.Blockquote("This app does not store any of your data."),
-    dcc.Upload(
-        id='upload-data',
-        children=html.Div([
-            'Drag and Drop or ',
-            html.A('Select Files')
+    html.Header("Gantt ❌ Boxplot"),
+    dcc.Tabs([
+        dcc.Tab(label="Visualisations", children=[
+            dcc.Upload(
+                id='upload-data',
+                children=html.Div([
+                    'Drag and Drop or ',
+                    html.A('Select Files')
+                ]),
+                style={
+                    'width': '100%',
+                    'height': '60px',
+                    'lineHeight': '60px',
+                    'borderWidth': '1px',
+                    'borderStyle': 'dashed',
+                    'borderRadius': '5px',
+                    'textAlign': 'center',
+                    'margin': '10px'
+                },
+                # Allow multiple files to be uploaded
+                multiple=True
+            ),
+            dcc.Graph(id="Mygraph", figure={}),
         ]),
-        style={
-            'width': '100%',
-            'height': '60px',
-            'lineHeight': '60px',
-            'borderWidth': '1px',
-            'borderStyle': 'dashed',
-            'borderRadius': '5px',
-            'textAlign': 'center',
-            'margin': '10px'
-        },
-        # Allow multiple files to be uploaded
-        multiple=True
-    ),
-    dcc.Graph(id="Mygraph", figure={}),
+        dcc.Tab(label='A propos', children=[
+            html.Div(children=
+                html.Blockquote("This app does not store any of your data."),
+                ),
+        ])
+    ]),
+    
     html.Footer(["Made by Clément Feltin. Feel free to contribute: ", html.A("https://github.com/ClementFeltin/gantt-x-boxplot")]),
 ])
 
