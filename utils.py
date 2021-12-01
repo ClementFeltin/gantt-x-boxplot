@@ -36,7 +36,7 @@ def proba_gantt(df, file_path=None):
     
 #proba_gantt(df)    
 
-def ws_to_df(file, filter=None):
+def simulation_to_df(file, filter=None):
     """Reads wait and sea output file and converts it into a pandas dataframe usable with proba_gantt
     
     filter : tuple (lower, upper), allows to filter between two PXX eg (0.875, 0.925) or (0.9, 1) """
@@ -46,19 +46,19 @@ def ws_to_df(file, filter=None):
     df_durations = pd.read_excel(file, sheet_name="raw gross durations", index_col=0)
     df_standby = pd.read_excel(file, sheet_name="raw standby", index_col=0)
     
-    df_ws = pd.DataFrame()
-    df_ws["Start"] = pd.to_datetime(df_start.stack())
-    df_ws["Finish"] = pd.to_datetime(df_end.stack())
-    df_ws["Gross Durations"] = df_durations.stack()
-    df_ws["Standby"] = df_standby.stack()
-    df_ws.index = df_ws.index.set_names(["Task", "Simu"])
-    df_ws = df_ws.reset_index()
+    df_simulation = pd.DataFrame()
+    df_simulation["Start"] = pd.to_datetime(df_start.stack())
+    df_simulation["Finish"] = pd.to_datetime(df_end.stack())
+    df_simulation["Gross Durations"] = df_durations.stack()
+    df_simulation["Standby"] = df_standby.stack()
+    df_simulation.index = df_simulation.index.set_names(["Task", "Simu"])
+    df_simulation = df_simulation.reset_index()
     # https://stackoverflow.com/questions/20110170/turn-pandas-multi-index-into-column
     
     if filter is not None:
-        lower = df_ws.quantile(filter[0]).Standby
-        upper = df_ws.quantile(filter[1]).Standby
+        lower = df_simulation.quantile(filter[0]).Standby
+        upper = df_simulation.quantile(filter[1]).Standby
 
-        df_ws = df_ws[(df_ws.Standby >= lower) & (df_ws.Standby <= upper)]
+        df_simulation = df_simulation[(df_simulation.Standby >= lower) & (df_simulation.Standby <= upper)]
     
-    return df_ws
+    return df_simulation

@@ -11,7 +11,7 @@ import dash_table
 
 import pandas as pd
 
-from utils import proba_gantt, ws_to_df
+from utils import proba_gantt, simulation_to_df
 from authentification import VALID_USERNAME_PASSWORD_PAIRS
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -23,28 +23,38 @@ auth = dash_auth.BasicAuth(
 )
 
 app.layout = html.Div([
-    html.Header("Gantt X Boxplot"),
-    dcc.Upload(
-        id='upload-data',
-        children=html.Div([
-            'Drag and Drop or ',
-            html.A('Select Files')
+    html.Header("Gantt ❌ Boxplot"),
+    dcc.Tabs([
+        dcc.Tab(label="Visualisations", children=[
+            dcc.Upload(
+                id='upload-data',
+                children=html.Div([
+                    'Drag and Drop or ',
+                    html.A('Select Files')
+                ]),
+                style={
+                    'width': '100%',
+                    'height': '60px',
+                    'lineHeight': '60px',
+                    'borderWidth': '1px',
+                    'borderStyle': 'dashed',
+                    'borderRadius': '5px',
+                    'textAlign': 'center',
+                    'margin': '10px'
+                },
+                # Allow multiple files to be uploaded
+                multiple=True
+            ),
+            dcc.Graph(id="Mygraph", figure={}),
         ]),
-        style={
-            'width': '100%',
-            'height': '60px',
-            'lineHeight': '60px',
-            'borderWidth': '1px',
-            'borderStyle': 'dashed',
-            'borderRadius': '5px',
-            'textAlign': 'center',
-            'margin': '10px'
-        },
-        # Allow multiple files to be uploaded
-        multiple=True
-    ),
-    dcc.Graph(id="Mygraph", figure={}),
-    html.Footer("Made by Clément FELTIN without storing any of your data. . Contact : clement.feltin@rte-france")
+        dcc.Tab(label='A propos', children=[
+            html.Div(children=
+                html.Blockquote("This app does not store any of your data."),
+                ),
+        ])
+    ]),
+    
+    html.Footer(["Made by Clément Feltin. Feel free to contribute: ", html.A("https://github.com/ClementFeltin/gantt-x-boxplot")]),
 ])
 
 
@@ -60,7 +70,7 @@ def parse_contents(contents, filename, date):
         elif 'xls' in filename:
             # Assume that the user uploaded an excel file
             # df = pd.read_excel(io.BytesIO(decoded))
-            df = ws_to_df(io.BytesIO(decoded))
+            df = simulation_to_df(io.BytesIO(decoded))
     except Exception as e:
         print(e)
         return html.Div([
